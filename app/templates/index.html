@@ -1,18 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% if title %}
-    <title>{{ title }} - Task Manager</title>
-    {% else %}
-    <title>Welcome to Task Manager!</title>
-    {% endif %}
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
     <h1>Hello, {{ user.username }}</h1>
     {% for task in tasks %}
     <div><p> {{ task.task }} </p></div>
     {% endfor %}
-</body>
-</html>
+{% endblock %}
