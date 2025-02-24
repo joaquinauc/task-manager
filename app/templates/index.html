@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hello, {{ user.username }}</h1>
+    <h1>Hi, {{ current_user.username }}</h1>
     {% for task in tasks %}
-    <div><p> {{ task.task }} </p></div>
+    <div>
+        <h2>{{ task.title }}</h2>
+        <br>
+        <p>{{ task.body }}</p>
+    </div>
     {% endfor %}
 {% endblock %}
