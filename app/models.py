@@ -3,7 +3,7 @@ from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 
-from app import db
+from app import db, login
 
 class User(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -26,3 +26,7 @@ class Task(db.Model):
     )
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),index=True)
     author: so.Mapped[User] = so.relationship(back_populates='tasks')
+
+@login.user_loader
+def load_user(id):
+    return db.session.get(User, int(id))
