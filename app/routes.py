@@ -18,7 +18,7 @@ def index():
             'task': 'Do the dishes'
         }
     ]
-    return render_template('index.html', title='Home', user=user, tasks=tasks)
+    return render_template('index.html', title='Home', tasks=tasks)
 
 
 @app.route('/login', methods=['GET', 'POST'])
