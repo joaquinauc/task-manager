@@ -13,13 +13,13 @@ from app.models import User
 @app.route('/index')
 @login_required
 def index():
-    user = {'username': 'Joaquin'}
     tasks = [
         {
             'task': 'Do the dishes'
         }
     ]
     return render_template('index.html', title='Home', user=user, tasks=tasks)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -39,6 +39,7 @@ def login():
             next_page = urlsplit('index')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
+
 
 @app.route('/logout')
 def logout():
