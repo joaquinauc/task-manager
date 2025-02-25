@@ -5,8 +5,8 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
-from app.models import User
+from app.forms import LoginForm, RegistrationForm, AddTaskForm
+from app.models import User, Task
 
 
 @app.route('/')
@@ -14,14 +14,20 @@ from app.models import User
 def index():
     return render_template('index.html', title='Home')
 
-@app.route('/dashboard')
+
+@app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    tasks = [
-        {'title': 'Do exercise', 'body': '30 mins of cardio, 4 sets of 12 reps of...'},
-        {'title': 'Do homework', 'body': 'Actividad 2 de Instrumentacion, Tarea 3 de...'}
-    ]
-    return render_template('dashboard.html', title='Home', tasks=tasks)
+    user = db.first_or_404(sa.select(User).where(User.username == current_user.username))
+    query = user.tasks.select().order_by(Task.id.desc())
+    tasks = db.session.scalars(query).all()
+    form = AddTaskForm()
+    if form.validate_on_submit():
+        task = Task(title=form.task.data, author=current_user, body='None')
+        db.session.add(task)
+        db.session.commit()
+        return redirect(url_for('dashboard'))
+    return render_template('dashboard.html', title='Dashboard', tasks=tasks, form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
