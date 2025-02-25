@@ -14,9 +14,8 @@ from app.models import User
 @login_required
 def index():
     tasks = [
-        {
-            'task': 'Do the dishes'
-        }
+        {'title': 'Do exercise', 'body': '30 mins of cardio, 4 sets of 12 reps of...'},
+        {'title': 'Do homework', 'body': 'Actividad 2 de Instrumentacion, Tarea 3 de...'}
     ]
     return render_template('index.html', title='Home', tasks=tasks)
 
