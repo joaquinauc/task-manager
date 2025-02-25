@@ -11,13 +11,17 @@ from app.models import User
 
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
+    return render_template('index.html', title='Home')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
     tasks = [
         {'title': 'Do exercise', 'body': '30 mins of cardio, 4 sets of 12 reps of...'},
         {'title': 'Do homework', 'body': 'Actividad 2 de Instrumentacion, Tarea 3 de...'}
     ]
-    return render_template('index.html', title='Home', tasks=tasks)
+    return render_template('dashboard.html', title='Home', tasks=tasks)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -35,7 +39,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
-            next_page = urlsplit('index')
+            next_page = url_for('dashboard')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
