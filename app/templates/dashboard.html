@@ -1,10 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for task in tasks %}
     <div>
-        <h2>{{ task.title }}</h2>
-        <p>{{ task.body }}</p>
+        {% for task in tasks %}
+        <a href="#">{{ task.title }}</a><br>
+        {% endfor %}
     </div>
-    {% endfor %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.task.label }}
+            {{ form.task(size=32) }}
+            {% for error in form.task.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>{{ form.submit() }}</p>
+    </form>
 {% endblock %}
