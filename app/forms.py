@@ -34,3 +34,7 @@ class RegistrationForm(FlaskForm):
             User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+class AddTaskForm(FlaskForm):
+    task = StringField('New Task', validators=[DataRequired()])
+    submit = SubmitField('Add Task')
