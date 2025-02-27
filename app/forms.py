@@ -38,3 +38,6 @@ class RegistrationForm(FlaskForm):
 class AddTaskForm(FlaskForm):
     task = StringField('New Task', validators=[DataRequired()])
     submit = SubmitField('Add Task')
+
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')
