@@ -75,9 +75,7 @@ def register():
 def delete(title, id):
     form = EmptyForm()
     if form.validate_on_submit():
-        user = db.first_or_404(sa.select(User).where(User.username == current_user.username))
-        query = user.tasks.select().where(Task.id == id, Task.title == title)
-        task = db.session.scalar(query)
+        task = db.session.scalar(sa.select(Task).where(Task.id == id, Task.title == title))
         db.session.delete(task)
         db.session.commit()
         return redirect(url_for('dashboard'))
