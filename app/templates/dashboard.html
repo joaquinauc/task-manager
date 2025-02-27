@@ -3,7 +3,11 @@
 {% block content %}
     <div>
         {% for task in tasks %}
-        <a href="#">{{ task.title }}</a><br>
+        <a href="#">{{ task.title }}</a>
+        <form action="{{ url_for('delete', id=task.id, title=task.title) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Delete') }}
+        </form>
         {% endfor %}
     </div>
     <form action="" method="post">
