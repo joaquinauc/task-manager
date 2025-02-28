@@ -5,7 +5,7 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, AddTaskForm, EmptyForm
+from app.forms import LoginForm, RegistrationForm, AddTaskForm, EmptyForm, EditTaskForm
 from app.models import User, Task
 
 
@@ -69,6 +69,29 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/task/<id>-<title>', methods=['GET', 'POST'])
+def task(id, title):
+    form = EditTaskForm()
+    task = db.session.scalar(sa.select(Task).where(Task.id == id, Task.title == title))
+
+    if request.method == 'POST':
+        if request.content_type == 'application/json':
+            data = request.get_json()
+            task.due_date = data.get('due_date', task.due_date)
+            db.session.commit()
+        else:
+            if form.validate_on_submit():
+                task.title = form.title.data
+                task.body = form.description.data
+                db.session.commit()
+                return redirect(url_for('dashboard'))
+
+    elif request.method == 'GET':
+        form.title.data = task.title
+        form.description.data = task.body
+    return render_template('task.html', title='Edit Task', form=form, task=task)
 
 
 @app.route('/delete/<id>-<title>', methods=['GET', 'POST'])
