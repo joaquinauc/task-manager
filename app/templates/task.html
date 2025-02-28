@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if title %}
+    <title>{{ title }} - Task Manager</title>
+    {% else %}
+    <title>Welcome to Task Manager!</title>
+    {% endif %}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #calendar {
+            width: 100%;
+            max-width: 300px;
+            height: 250px;
+            margin: 0px;
+            border: 1px solid #ccc;
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.2em;
+        }
+
+        .fc-toolbar .fc-button {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ task.title }}</h1>
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title(size=32) }}<br>
+            {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(cols=50, rows=4) }}<br>
+            {% for error in form.description.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <div id="calendar"></div>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: '{{ url_for('task', id=task.id, title=task.title) }}',
+                selectable: true,
+                editable: true,
+
+                dateClick: function(info) {
+                    let title = "{{ task.title }}";
+                    if (title) {
+                        let selectedDate = new Date(info.date);
+                        let formattedDate = selectedDate.toLocaleDateString('en-US', {
+                            month: '2-digit', day: '2-digit', year: 'numeric'
+                        }).replace(/\//g, '-');
+
+                        let newEvent = { due_date: formattedDate };
+
+                        $.ajax({
+                            url: '{{ url_for('task', id=task.id, title=task.title) }}',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(newEvent),
+                            success: function() { calendar.refetchEvents(); }
+                        });
+                    }
+                }
+            });
+            calendar.render();
+        });
+    </script>
+</body>
+</html>
