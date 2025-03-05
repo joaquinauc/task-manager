@@ -49,6 +49,10 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
+        <p>
+            {{ select_form.options.label }}
+            {{ select_form.options(size=1) }}
+        </p>
         <div id="calendar"></div>
         <p>{{ form.submit() }}</p>
     </form>
