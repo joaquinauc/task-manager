@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 
 import sqlalchemy as sa
@@ -49,3 +49,7 @@ class EditTaskForm(FlaskForm):
 
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
+
+
+class SelectForm(FlaskForm):
+    options = SelectField('Task Status', choices=[(1, 'Pending'), (2, 'In Progress'), (3, 'Completed')])
