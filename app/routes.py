@@ -5,7 +5,7 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, AddTaskForm, EmptyForm, EditTaskForm
+from app.forms import LoginForm, RegistrationForm, AddTaskForm, EmptyForm, EditTaskForm, SelectForm
 from app.models import User, Task
 
 
@@ -23,7 +23,7 @@ def dashboard():
     tasks = db.session.scalars(query).all()
     form = AddTaskForm()
     if form.validate_on_submit():
-        task = Task(title=form.task.data, author=current_user)
+        task = Task(title=form.task.data, author=current_user, progress=1)
         db.session.add(task)
         db.session.commit()
         return redirect(url_for('dashboard'))
@@ -74,6 +74,7 @@ def register():
 @app.route('/task/<id>-<title>', methods=['GET', 'POST'])
 def task(id, title):
     form = EditTaskForm()
+    select_form = SelectForm()
     task = db.session.scalar(sa.select(Task).where(Task.id == id, Task.title == title))
 
     if request.method == 'POST':
@@ -85,13 +86,15 @@ def task(id, title):
             if form.validate_on_submit():
                 task.title = form.title.data
                 task.body = form.description.data
+                task.progress = select_form.options.data
                 db.session.commit()
                 return redirect(url_for('dashboard'))
 
     elif request.method == 'GET':
         form.title.data = task.title
         form.description.data = task.body
-    return render_template('task.html', title='Edit Task', form=form, task=task)
+        select_form.options.data = task.progress
+    return render_template('task.html', title='Edit Task', form=form, task=task, select_form=select_form)
 
 
 @app.route('/delete/<id>-<title>', methods=['GET', 'POST'])
