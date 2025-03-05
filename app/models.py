@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from typing import Optional
 
 from flask_login import UserMixin
@@ -27,13 +26,16 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
 class Task(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     title: so.Mapped[str] = so.mapped_column(sa.String(40))
     body: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
     due_date: so.Mapped[Optional[str]] = so.mapped_column(sa.String(20))
+    progress: so.Mapped[Optional[int]] = so.mapped_column()
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),index=True)
     author: so.Mapped[User] = so.relationship(back_populates='tasks')
+
 
 @login.user_loader
 def load_user(id):
