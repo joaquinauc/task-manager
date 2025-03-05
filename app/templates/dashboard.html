@@ -4,13 +4,14 @@
     <div>
         {% for task in tasks %}
         <a href="{{ url_for('task', id=task.id, title=task.title) }}">{{ task.title }}</a>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Due Date: {{ task.due_date }}
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Due Date: {{ task.due_date }} | Task Status: {{ task.progress }}
         <form action="{{ url_for('delete', id=task.id, title=task.title) }}" method="post">
-                {{ form.hidden_tag() }}
-                {{ form.submit(value='Delete') }}
+            {{ form.hidden_tag() }}
+            {{ form.submit(value='Delete') }}
         </form>
         {% endfor %}
     </div>
+
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -20,7 +21,6 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-
         <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}
