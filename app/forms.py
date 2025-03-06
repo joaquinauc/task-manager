@@ -52,4 +52,5 @@ class EmptyForm(FlaskForm):
 
 
 class SelectForm(FlaskForm):
-    options = SelectField('Task Status', choices=[(1, 'Pending'), (2, 'In Progress'), (3, 'Completed')])
+    status = SelectField('Task Status', choices=[(1, 'Pending'), (2, 'In Progress'), (3, 'Completed')])
+    priority = SelectField('Priority', choices=[(1, 'Low'), (2, 'Medium'), (3, 'High')])
