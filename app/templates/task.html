@@ -50,8 +50,10 @@
             {% endfor %}
         </p>
         <p>
-            {{ select_form.options.label }}
-            {{ select_form.options(size=1) }}
+            {{ select_form.status.label }}
+            {{ select_form.status(size=1) }} <br><br>
+            {{ select_form.priority.label }}
+            {{ select_form.priority(size=1) }}
         </p>
         <div id="calendar"></div>
         <p>{{ form.submit() }}</p>
