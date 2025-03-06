@@ -33,6 +33,7 @@ class Task(db.Model):
     body: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
     due_date: so.Mapped[Optional[str]] = so.mapped_column(sa.String(20))
     progress: so.Mapped[Optional[int]] = so.mapped_column()
+    priority: so.Mapped[Optional[int]] = so.mapped_column()
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),index=True)
     author: so.Mapped[User] = so.relationship(back_populates='tasks')
 
