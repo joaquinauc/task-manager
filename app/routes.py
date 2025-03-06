@@ -22,12 +22,13 @@ def dashboard():
     query = user.tasks.select().order_by(Task.id.desc())
     tasks = db.session.scalars(query).all()
     form = AddTaskForm()
+    select_form = SelectForm()
     if form.validate_on_submit():
         task = Task(title=form.task.data, author=current_user, progress=1)
         db.session.add(task)
         db.session.commit()
         return redirect(url_for('dashboard'))
-    return render_template('dashboard.html', title='Dashboard', tasks=tasks, form=form)
+    return render_template('dashboard.html', title='Dashboard', tasks=tasks, form=form, select_form=select_form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -86,14 +87,16 @@ def task(id, title):
             if form.validate_on_submit():
                 task.title = form.title.data
                 task.body = form.description.data
-                task.progress = select_form.options.data
+                task.progress = select_form.status.data
+                task.priority = select_form.priority.data
                 db.session.commit()
                 return redirect(url_for('dashboard'))
 
     elif request.method == 'GET':
         form.title.data = task.title
         form.description.data = task.body
-        select_form.options.data = task.progress
+        select_form.status.data = str(task.progress)
+        select_form.priority.data = str(task.priority)
     return render_template('task.html', title='Edit Task', form=form, task=task, select_form=select_form)
 
 
