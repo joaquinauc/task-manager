@@ -21,7 +21,7 @@
                 <div class="flex-container">
                     {{ form.password(size=32, class="form-control", placeholder="Password") }}
                 </div>
-                <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+                <p>{{ form.remember_me(class="mt-2") }} {{ form.remember_me.label }}</p>
                 <p>{{ form.submit(class="btn btn-lg btn-dark btn-block") }}</p>
                 <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
             </form>
