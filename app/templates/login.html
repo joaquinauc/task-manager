@@ -1,25 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}
-            {{ form.username(size=32) }}
-            {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}
-            {{ form.password(size=32) }}
-            {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit() }}</p>
-        <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
-    </form>
+    {% for error in form.username.errors %}
+        <div class="alert alert-info" role="alert">{{ error }}</div>
+    {% endfor %}
+    {% for error in form.password.errors %}
+        <div class="alert alert-info" role="alert">{{ error }}</div>
+    {% endfor %}
+
+    <div class="d-flex vh-100 align-items-center justify-content-center">
+        <div class="text-center">
+            <img src="{{ url_for('static', filename='calendar-check-fill.svg') }}"
+                 width="72" height="72" class="mb-4">
+            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <form class="form-signin" action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="flex-container">
+                    {{ form.username(size=32, class="form-control", placeholder="Username") }}
+                </div>
+                <div class="flex-container">
+                    {{ form.password(size=32, class="form-control", placeholder="Password") }}
+                </div>
+                <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+                <p>{{ form.submit(class="btn btn-lg btn-dark btn-block") }}</p>
+                <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
+            </form>
+        </div>
+    </div>
 {% endblock %}
