@@ -1,62 +1,35 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% if title %}
-    <title>{{ title }} - Task Manager</title>
-    {% else %}
-    <title>Welcome to Task Manager!</title>
-    {% endif %}
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        #calendar {
-            width: 100%;
-            max-width: 300px;
-            height: 250px;
-            margin: 0px;
-            border: 1px solid #ccc;
-        }
+{% extends "base.html" %}
 
-        .fc .fc-toolbar-title {
-            font-size: 1.2em;
-        }
-
-        .fc-toolbar .fc-button {
-            font-size: 12px;
-            padding: 4px 8px;
-        }
-    </style>
-</head>
-<body>
-    <h1>{{ task.title }}</h1>
-
+{% block content %}
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.title.label }}<br>
-            {{ form.title(size=32) }}<br>
-            {% for error in form.title.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.description.label }}<br>
-            {{ form.description(cols=50, rows=4) }}<br>
-            {% for error in form.description.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ select_form.status.label }}
-            {{ select_form.status(size=1) }} <br><br>
-            {{ select_form.priority.label }}
-            {{ select_form.priority(size=1) }}
-        </p>
-        <div id="calendar"></div>
-        <p>{{ form.submit() }}</p>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-9">
+                    <div class="row mt-2">
+                        {{ form.title(size=32, style="font-size: 2.5rem", class="form-control col-6 border border-white") }}
+                        {% for error in form.title.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mt-2 ml-1">{{ form.description.label }}</div>
+                    <div class="row mt-2 ml-1">
+                        {{ form.description(rows=5, cols=20, style="height: 150px", class="form-control col-3 text-break", placeholder="Write a description...") }}
+                        {% for error in form.description.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mt-2 ml-1">{{ select_form.status.label }}</div>
+                    <div class="row mt-1 ml-1">{{ select_form.status(size=1, class="form-control col-2") }}</div>
+                    <div class="row mt-2 ml-1">{{ select_form.priority.label }}</div>
+                    <div class="row mt-1 ml-1">{{ select_form.priority(size=1, class="form-control col-2") }}</div>
+                    <div id="calendar" class="row mt-2"></div>
+                    <div class="row mt-2 ml-1">
+                        <div class="col-0">{{ form.submit(class="form-control btn btn-dark") }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 
     <script>
@@ -91,5 +64,4 @@
             calendar.render();
         });
     </script>
-</body>
-</html>
+{% endblock %}
