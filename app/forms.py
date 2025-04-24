@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 
 import sqlalchemy as sa
+from wtforms.widgets.core import TextArea
 
 from app import db
 from app.models import User
@@ -43,7 +45,7 @@ class AddTaskForm(FlaskForm):
 
 class EditTaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    description = StringField('Description', validators=[Length(0, 140)])
+    description = TextAreaField('Description', validators=[Length(0, 140)])
     submit = SubmitField('Apply')
 
 
