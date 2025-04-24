@@ -23,11 +23,39 @@ def dashboard():
     tasks = db.session.scalars(query).all()
     form = AddTaskForm()
     select_form = SelectForm()
-    if form.validate_on_submit():
-        task = Task(title=form.task.data, author=current_user, progress=1)
-        db.session.add(task)
-        db.session.commit()
-        return redirect(url_for('dashboard'))
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            task = Task(title=form.task.data, author=current_user, progress=1)
+            db.session.add(task)
+            db.session.commit()
+            return redirect(url_for('dashboard'))
+
+    elif request.method == 'GET':
+        updated = False
+        for task in tasks:
+            status = request.args.get(f'status{task.id}')
+            priority = request.args.get(f'priority{task.id}')
+
+            try:
+                if status:
+                    status = int(status)
+                    if 1 <= status <= 3 and status != task.progress:
+                        task.progress = status
+                        updated = True
+
+                elif priority:
+                    priority = int(priority)
+                    if 1 <= priority <= 3 and priority != task.priority:
+                        updated = True
+                        task.priority = priority
+
+            except ValueError:
+                print(f"Error: 'Task ID {task.id}' has an invalid status or priority value.")
+
+        if updated:
+            db.session.commit()
+            return redirect(url_for('dashboard'))
     return render_template('dashboard.html', title='Dashboard', tasks=tasks, form=form, select_form=select_form)
 
 
@@ -41,7 +69,7 @@ def login():
             sa.select(User).where(User.username == form.username.data)
         )
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid username or password.')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
