@@ -1,28 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div>
+    <div class="container-fluid">
+        <div class="row text-center mt-2">
+            <div class="col">Task</div>
+            <div class="col">Status</div>
+            <div class="col">Priority</div>
+            <div class="col">Due date</div>
+            <div class="col">Remove task</div>
+        </div>
         {% for task in tasks %}
-        <a href="{{ url_for('task', id=task.id, title=task.title) }}">{{ task.title }}</a>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Due Date: {{ task.due_date }} |
-        Task Status: {{ dict(select_form.status.choices).get(task.progress) }} |
-        Priority: {{ dict(select_form.priority.choices).get(task.priority) }}
-        <form action="{{ url_for('delete', id=task.id, title=task.title) }}" method="post">
-            {{ form.hidden_tag() }}
-            {{ form.submit(value='Delete') }}
-        </form>
+            <div class="row mt-2">
+                <div class="col">
+                    <a href="{{ url_for('task', id=task.id, title=task.title) }}" class="btn btn-light btn-md active btn-block"
+                       role="button" data-toggle="button" aria-pressed="false" id="btn-task">{{ task.title }}</a>
+                </div>
+                <div class="col">
+                    <form action="" method="GET">
+                        <select name="status{{ task.id }}" class="form-control btn btn-light" onchange="this.form.submit()">
+                            {% for value, label in select_form.status.choices %}
+                                <option value="{{ value }}" {% if value|string == task.progress|string %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+                <div class="col">
+                    <form action="" method="GET">
+                        <select name="priority{{ task.id }}" class="form-control btn btn-light" onchange="this.form.submit()">
+                            {% for value, label in select_form.priority.choices %}
+                                <option value="{{ value }}" {% if value|string == task.priority|string %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+                <div class="col text-center">{{ task.due_date }}</div>
+                <div class="col">
+                    <form action="{{ url_for('delete', id=task.id, title=task.title) }}" method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.submit(value='Delete', class="form-control btn btn-light") }}
+                    </form>
+                </div>
+            </div>
         {% endfor %}
     </div>
 
-    <form action="" method="post">
+    <form action="" method="POST">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.task.label }}
-            {{ form.task(size=32) }}
-            {% for error in form.task.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
+        <div class="container-fluid">
+            <div class="row mt-5">
+                <div class="col-2">{{ form.task(class="form-control", placeholder="New task") }}</div>
+                <div class="col-0">{{ form.submit(class="form-control btn btn-dark") }}</div>
+                {% for error in form.task.errors %}
+                    <div class="alert alert-info" role="alert">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
     </form>
 {% endblock %}
