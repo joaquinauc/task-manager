@@ -23,7 +23,15 @@
                     <div class="row mt-1 ml-1">{{ select_form.status(size=1, class="form-control col-2") }}</div>
                     <div class="row mt-2 ml-1">{{ select_form.priority.label }}</div>
                     <div class="row mt-1 ml-1">{{ select_form.priority(size=1, class="form-control col-2") }}</div>
-                    <div id="calendar" class="row mt-2"></div>
+                    <div class="row mt-2 ml-1" style="width: 200px;">
+                        <div class="d-flex flex-column align-items-start">
+                            <label for="date">
+                                Due date
+                                <i class="fa-solid fa-calendar-days mb-1" style="position: absolute; top: calc(86.5%); left: 12rem;"></i>
+                            </label>
+                            <input type="text" id="date" name="date" placeholder="Date" class="form-control" style="width: 200px; background-color: white;">
+                        </div>
+                    </div>
                     <div class="row mt-2 ml-1">
                         <div class="col-0">{{ form.submit(class="form-control btn btn-dark") }}</div>
                     </div>
@@ -33,35 +41,9 @@
     </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: '{{ url_for('task', id=task.id, title=task.title) }}',
-                selectable: true,
-                editable: true,
-
-                dateClick: function(info) {
-                    let title = "{{ task.title }}";
-                    if (title) {
-                        let selectedDate = new Date(info.date);
-                        let formattedDate = selectedDate.toLocaleDateString('en-US', {
-                            month: '2-digit', day: '2-digit', year: 'numeric'
-                        }).replace(/\//g, '-');
-
-                        let newEvent = { due_date: formattedDate };
-
-                        $.ajax({
-                            url: '{{ url_for('task', id=task.id, title=task.title) }}',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify(newEvent),
-                            success: function() { calendar.refetchEvents(); }
-                        });
-                    }
-                }
-            });
-            calendar.render();
-        });
+      flatpickr("#date", {
+        dateFormat: "m-d-Y",
+        minDate: "today",
+      });
     </script>
 {% endblock %}
