@@ -107,18 +107,14 @@ def task(id, title):
     task = db.session.scalar(sa.select(Task).where(Task.id == id, Task.title == title))
 
     if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = request.get_json()
-            task.due_date = data.get('due_date', task.due_date)
+        task.due_date = request.form.get('date')
+        if form.validate_on_submit():
+            task.title = form.title.data
+            task.body = form.description.data
+            task.progress = select_form.status.data
+            task.priority = select_form.priority.data
             db.session.commit()
-        else:
-            if form.validate_on_submit():
-                task.title = form.title.data
-                task.body = form.description.data
-                task.progress = select_form.status.data
-                task.priority = select_form.priority.data
-                db.session.commit()
-                return redirect(url_for('dashboard'))
+            return redirect(url_for('dashboard'))
 
     elif request.method == 'GET':
         form.title.data = task.title
