@@ -1,49 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-9">
-                    <div class="row mt-2">
-                        {{ form.title(size=32, style="font-size: 2.5rem", class="form-control col-6 border border-white") }}
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="modal-header">
+                        {{ form.title(size=32, style="font-size: 2.5rem", class="form-control border border-white") }}
                         {% for error in form.title.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="row mt-2 ml-1">{{ form.description.label }}</div>
-                    <div class="row mt-2 ml-1">
-                        {{ form.description(rows=5, cols=20, style="height: 150px", class="form-control col-3 text-break", placeholder="Write a description...") }}
-                        {% for error in form.description.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                        {% endfor %}
-                    </div>
-                    <div class="row mt-2 ml-1">{{ select_form.status.label }}</div>
-                    <div class="row mt-1 ml-1">{{ select_form.status(size=1, class="form-control col-2") }}</div>
-                    <div class="row mt-2 ml-1">{{ select_form.priority.label }}</div>
-                    <div class="row mt-1 ml-1">{{ select_form.priority(size=1, class="form-control col-2") }}</div>
-                    <div class="row mt-2 ml-1" style="width: 200px;">
-                        <div class="d-flex flex-column align-items-start">
-                            <label for="date">
-                                Due date
-                                <i class="fa-solid fa-calendar-days mb-1" style="position: absolute; top: calc(86.5%); left: 12rem;"></i>
-                            </label>
-                            <input type="text" id="date" name="date" placeholder="Date" class="form-control" style="width: 200px; background-color: white;">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            {{ form.description.label }}
+                            {{ form.description(rows=5, cols=20, style="height: 150px", class="form-control text-break", placeholder="Write a description...") }}
+                            {% for error in form.description.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
                         </div>
+                        <div class="form-group">
+                            <div class="d-flex flex-column align-items-start">
+                                <label for="date">
+                                    Due date
+                                    <i class="fa-solid fa-calendar-days mb-1" style="position: absolute; top: calc(72.5%); left: 12rem;"></i>
+                                </label>
+                                <input type="text" id="date" name="date" placeholder="Date" class="form-control" style="width: 200px; background-color: white;">
+                            </div>
+                        </div>
+                        <div>{{ form.submit(class="form-control btn btn-dark") }}</div>
                     </div>
-                    <div class="row mt-2 ml-1">
-                        <div class="col-0">{{ form.submit(class="form-control btn btn-dark") }}</div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 
     <script>
-      flatpickr("#date", {
-        dateFormat: "m-d-Y",
-        minDate: "today",
-      });
+        $(document).ready(function () {
+            $('#myModal').modal('show');
+
+            $('#myModal').on('hidden.bs.modal', function () {
+                window.location.href = "{{ url_for('dashboard') }}";
+            });
+        });
+
+        flatpickr("#date", {
+            dateFormat: "m-d-Y",
+            minDate: "today",
+        });
     </script>
 {% endblock %}
