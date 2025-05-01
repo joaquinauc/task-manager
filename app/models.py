@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
                                              unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     tasks: so.WriteOnlyMapped['Task'] = so.relationship(back_populates='author')
+    activities: so.WriteOnlyMapped['Activity'] = so.relationship(back_populates='author')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -34,8 +35,22 @@ class Task(db.Model):
     due_date: so.Mapped[Optional[str]] = so.mapped_column(sa.String(20))
     progress: so.Mapped[Optional[int]] = so.mapped_column()
     priority: so.Mapped[Optional[int]] = so.mapped_column()
-    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),index=True)
+
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     author: so.Mapped[User] = so.relationship(back_populates='tasks')
+    activities: so.WriteOnlyMapped['Activity'] = so.relationship(back_populates='task')
+
+
+class Activity(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    activity: so.Mapped[str] = so.mapped_column(sa.String(100))
+    done: so.Mapped[bool] = so.mapped_column(sa.Boolean)
+
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    task_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Task.id), index=True)
+
+    author: so.Mapped[User] = so.relationship(back_populates='activities')
+    task: so.Mapped[Task] = so.relationship(back_populates='activities')
 
 
 @login.user_loader
