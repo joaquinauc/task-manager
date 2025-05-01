@@ -107,20 +107,16 @@ def task(id, title):
     task = db.session.scalar(sa.select(Task).where(Task.id == id, Task.title == title))
 
     if request.method == 'POST':
-        task.due_date = request.form.get('date')
         if form.validate_on_submit():
+            task.due_date = request.form.get('date')
             task.title = form.title.data
             task.body = form.description.data
-            task.progress = select_form.status.data
-            task.priority = select_form.priority.data
             db.session.commit()
             return redirect(url_for('dashboard'))
 
     elif request.method == 'GET':
         form.title.data = task.title
         form.description.data = task.body
-        select_form.status.data = str(task.progress)
-        select_form.priority.data = str(task.priority)
     return render_template('task.html', title='Edit Task', form=form, task=task, select_form=select_form)
 
 
