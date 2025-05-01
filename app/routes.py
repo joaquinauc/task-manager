@@ -6,7 +6,7 @@ import sqlalchemy as sa
 
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, AddTaskForm, EmptyForm, EditTaskForm, SelectForm
-from app.models import User, Task
+from app.models import User, Task, Activity
 
 
 @app.route('/')
@@ -105,19 +105,31 @@ def task(id, title):
     form = EditTaskForm()
     select_form = SelectForm()
     task = db.session.scalar(sa.select(Task).where(Task.id == id, Task.title == title))
+    query = task.activities.select().order_by(Activity.id.desc())
+    activities = db.session.scalars(query).all()
 
     if request.method == 'POST':
         if form.validate_on_submit():
-            task.due_date = request.form.get('date')
-            task.title = form.title.data
-            task.body = form.description.data
-            db.session.commit()
-            return redirect(url_for('dashboard'))
+            if request.form.get('AddTask'):
+                if form.activity.data !="":
+                    activity = Activity(activity=form.activity.data, done=False, author=current_user, task_id=task.id)
+                    db.session.add(activity)
+                    db.session.commit()
+                return redirect(url_for('task', id=id, title=title))
+
+            else:
+                task.due_date = request.form.get('date')
+                task.title = form.title.data
+                task.body = form.description.data
+                db.session.commit()
+                return redirect(url_for('dashboard'))
 
     elif request.method == 'GET':
         form.title.data = task.title
         form.description.data = task.body
-    return render_template('task.html', title='Edit Task', form=form, task=task, select_form=select_form)
+
+    return render_template('task.html', title='Edit Task', form=form, task=task, select_form=select_form,
+                           activities=activities, id=id, task_title=title, date=task.due_date)
 
 
 @app.route('/delete/<id>-<title>', methods=['GET', 'POST'])
