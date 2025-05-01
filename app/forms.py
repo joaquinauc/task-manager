@@ -46,6 +46,8 @@ class AddTaskForm(FlaskForm):
 class EditTaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[Length(0, 140)])
+    activity = StringField('Activities')
+    check_done = BooleanField('Completed')
     submit = SubmitField('Apply')
 
 
