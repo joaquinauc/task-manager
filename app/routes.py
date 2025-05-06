@@ -140,3 +140,13 @@ def delete(title, id):
         db.session.delete(task)
         db.session.commit()
         return redirect(url_for('dashboard'))
+
+
+@app.route('/task/<task_id>-<task_title>/d/<id>-<activity>', methods=['GET', 'POST'])
+def remove_activity(activity, id, task_id, task_title):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        act = db.session.scalar(sa.select(Activity).where(Activity.id == id, Activity.activity == activity))
+        db.session.delete(act)
+        db.session.commit()
+        return redirect(url_for('task', id=task_id, title=task_title))
