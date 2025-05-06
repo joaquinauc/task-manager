@@ -38,7 +38,7 @@ class Task(db.Model):
 
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     author: so.Mapped[User] = so.relationship(back_populates='tasks')
-    activities: so.WriteOnlyMapped['Activity'] = so.relationship(back_populates='task')
+    activities: so.WriteOnlyMapped['Activity'] = so.relationship(back_populates='task', passive_deletes=True, cascade='all, delete-orphan')
 
 
 class Activity(db.Model):
@@ -46,8 +46,8 @@ class Activity(db.Model):
     activity: so.Mapped[str] = so.mapped_column(sa.String(100))
     done: so.Mapped[bool] = so.mapped_column(sa.Boolean)
 
-    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
-    task_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Task.id), index=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id, ondelete='CASCADE', onupdate='CASCADE', name="fk_activity_user_id"), index=True)
+    task_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Task.id, ondelete='CASCADE', onupdate='CASCADE', name="fk_activity_task_id"), index=True)
 
     author: so.Mapped[User] = so.relationship(back_populates='activities')
     task: so.Mapped[Task] = so.relationship(back_populates='activities')
