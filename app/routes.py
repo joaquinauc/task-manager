@@ -121,6 +121,9 @@ def task(id, title):
                 task.due_date = request.form.get('date')
                 task.title = form.title.data
                 task.body = form.description.data
+                for activity in activities:
+                    status = request.form.get(f'status_{activity.id}')
+                    activity.done = True if status == 'on' else False
                 db.session.commit()
                 return redirect(url_for('dashboard'))
 
