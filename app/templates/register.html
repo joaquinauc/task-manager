@@ -1,37 +1,64 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Register</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-            {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
+    {% for error in form.username.errors %}
+        <div class="alert alert-info" role="alert">{{ error }}</div>
+    {% endfor %}
+    {% for error in form.email.errors %}
+        <div class="alert alert-info" role="alert">{{ error }}</div>
+    {% endfor %}
+    {% for error in form.password.errors %}
+        <div class="alert alert-info" role="alert">{{ error }}</div>
+    {% endfor %}
+    {% for error in form.password2.errors %}
+        <div class="alert alert-info" role="alert">{{ error }}</div>
+    {% endfor %}
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-center card bg-light"
+             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 100px;">
+            <article class="card-body mx-auto">
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='calendar-check-fill.svg') }}"
+                         width="72" height="72" class="mb-4">
+                    <h1 class="h3 mb-3 font-weight-normal">Create Account</h1>
+                    <form class="form-signin" action="" method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="flex-container input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-user"></i>
+                                </span>
+                            </div>
+                            {{ form.username(size=32, class="form-control", placeholder="Username") }}
+                        </div>
+                        <div class="flex-container mt-3  input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-envelope"></i>
+                                </span>
+                            </div>
+                            {{ form.email(size=32, class="form-control", placeholder="Email") }}
+                        </div>
+                        <div class="flex-container mt-3 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+                            </div>
+                            {{ form.password(size=32, class="form-control", placeholder="Password") }}
+                        </div>
+                        <div class="flex-container mt-3 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+                            </div>
+                            {{ form.password2(size=32, class="form-control", placeholder="Confirm password") }}
+                        </div>
+                        <div>{{ form.submit(class="btn btn-lg btn-dark btn-block mt-3") }}</div>
+                    </form>
+                </div>
+            </article>
         </div>
-        <div>
-            {{ form.email.label }}<br>
-            {{ form.email(size=64) }}<br>
-            {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.password2.label }}<br>
-            {{ form.password2(size=32) }}<br>
-            {% for error in form.password2.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </div>
-        <p>{{ form.submit() }}</p>
-    </form>
+    </div>
 {% endblock %}
