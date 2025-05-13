@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hi, {{ current_user.username }}</h1>
+    <div class="content-wrapper h-100 text-center bg-dark text-light">
+        <div class="cover-container d-flex p-3 mx-auto flex-column">
+            <main class="px-3" style="padding-top: 20%;">
+                <h1>Task Manager</h1>
+                <p class="lead" style="padding-left: 25%; padding-right: 25%">
+                    A web-based application designed to help users manage their daily tasks efficiently. The system allows users to create,
+                    read, update, and delete tasks with ease. Each task can include a detailed description and a due date,
+                    enabling better organization and time management. Built with a focus on usability and performance,
+                    this project demonstrates core full-stack development skills, including backend logic, data handling,
+                    and frontend user interface design.
+                </p>
+            </main>
+        </div>
+    </div>
 {% endblock %}
